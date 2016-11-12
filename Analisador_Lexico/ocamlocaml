@@ -1,0 +1,3 @@
+echo "rlwrap ocaml"
+rlwrap ocaml
+#use "carregador.ml";;  
