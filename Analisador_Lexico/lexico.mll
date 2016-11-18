@@ -10,7 +10,6 @@
      }
 
 
-  
   let caracter_erro lexbuf c =
     let pos = lexbuf.lex_curr_p in
     let lin = pos.pos_lnum
@@ -70,7 +69,7 @@ type tokens = PROGRAMA
             | LITINT of int
             | LITSTRING of string
             | LITFLOAT of float
-            | LITCHAR of char
+            | LITCHAR of string
             | ID of string
             | EOF
             (*
@@ -151,10 +150,11 @@ rule token = parse
 | "readln"   { READLN }
 
 | identificador as id { ID id }
-| '\'' |'"'        { let buffer = Buffer.create 1 in 
-               let str = leia_string buffer lexbuf in
-               LITSTRING str}
-
+| '\'' |'"'        { let buffer = Buffer.create 1 in
+                      let str = leia_string buffer lexbuf in
+                       let tam = Buffer.length buffer in 
+                         if(tam>1) then LITSTRING str   (*GAMBIARRA!!!*)
+                         else LITCHAR str}
 | _ as c  { failwith (caracter_erro lexbuf c) }
 | eof        { EOF }
 and comentario_bloco n b = parse
@@ -178,10 +178,7 @@ and leia_string buffer = parse
 | "\\t"   { Buffer.add_char buffer '\t'; leia_string buffer lexbuf }
 | '\''  { Buffer.add_char buffer '\''; leia_string buffer lexbuf }
 
-| _ as c    { Buffer.add_char buffer c; let tam = Buffer.length buffer in print_int tam; leia_string buffer lexbuf}
+| _ as c    {Buffer.add_char buffer c; leia_string buffer lexbuf}
 
 (**| _ as c    { Buffer.add_char buffer c; leia_string buffer lexbuf }**)
 | eof     { failwith (msg_erro lexbuf "String ")}
-
-and leia_char buffer = parse
-   '\''    { Buffer.contents buffer}
