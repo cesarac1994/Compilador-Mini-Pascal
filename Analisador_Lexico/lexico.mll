@@ -14,7 +14,7 @@
     let pos = lexbuf.lex_curr_p in
     let lin = pos.pos_lnum
     and col = pos.pos_cnum - pos.pos_bol - 1 in
-    sprintf "%d-%d: caracter desconhecido %c" lin col c
+    sprintf "%d-%d: caracter desconhecido %c " lin col c
 
   let msg_erro lexbuf oque =
     let pos = lexbuf.lex_curr_p in

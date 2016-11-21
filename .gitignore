@@ -1,0 +1,15 @@
+#IGNORAR ESTAS PASTA
+ignorar/
+_build/
+
+#IGNORAR AS SEGUINTES EXTENSOES:
+*.cmi
+*.cmo
+*.byte
+*.annot
+*.a
+*.o
+*.cmx
+*.cmxs
+*.cmxa
+*.pdf

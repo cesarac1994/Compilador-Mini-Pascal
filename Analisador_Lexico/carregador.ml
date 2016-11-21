@@ -21,8 +21,9 @@ let lex arq =
 ;;
 
 print_string "\n\n";;
-print_string "Para ler uma STRING e gerar os tokens, chame 'lexico STRING_ENTRE_ASPAS'";;
-print_string "Para ler um ARQUIVO e gerar os tokens, chame 'lex ARQUIVO_ENTRE_ASPAS"
+print_string "Usando carredor.ml";;
+print_string "\nPara ler uma STRING e gerar os tokens, chame 'lexico STRING_ENTRE_ASPAS ;;'";;
+print_string "\nPara ler um ARQUIVO e gerar os tokens, chame 'lex ARQUIVO_ENTRE_ASPAS ;;'\n\n";;
 
 
 

@@ -15,7 +15,7 @@
     let pos = lexbuf.lex_curr_p in
     let lin = pos.pos_lnum
     and col = pos.pos_cnum - pos.pos_bol - 1 in
-    sprintf "%d-%d: caracter desconhecido %c" lin col c
+    sprintf "%d-%d: caracter desconhecido %c " lin col c
 
   let msg_erro lexbuf oque =
     let pos = lexbuf.lex_curr_p in
@@ -2271,22 +2271,22 @@ let
                    ( let buffer = Buffer.create 1 in
                       let str = leia_string buffer lexbuf in
                        let tam = Buffer.length buffer in 
-                         if(tam>1) then LITSTRING str
+                         if(tam>1) then LITSTRING str   (*GAMBIARRA!!!*)
                          else LITCHAR str)
 # 2277 "lexico.ml"
 
   | 56 ->
 let
-# 163 "lexico.mll"
+# 158 "lexico.mll"
        c
 # 2283 "lexico.ml"
 = Lexing.sub_lexeme_char lexbuf lexbuf.Lexing.lex_start_pos in
-# 163 "lexico.mll"
+# 158 "lexico.mll"
           ( failwith (caracter_erro lexbuf c) )
 # 2287 "lexico.ml"
 
   | 57 ->
-# 164 "lexico.mll"
+# 159 "lexico.mll"
              ( EOF )
 # 2292 "lexico.ml"
 
@@ -2298,37 +2298,37 @@ and comentario_bloco n b lexbuf =
 and __ocaml_lex_comentario_bloco_rec n b lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 166 "lexico.mll"
+# 161 "lexico.mll"
           ( if (b>n) then failwith (msg_erro lexbuf "Comentario")
                else comentario_bloco (n-1) b lexbuf )
 # 2305 "lexico.ml"
 
   | 1 ->
-# 168 "lexico.mll"
+# 163 "lexico.mll"
           ( if (n>b) then failwith (msg_erro lexbuf "Comentario")
                else comentario_bloco n (b-1) lexbuf )
 # 2311 "lexico.ml"
 
   | 2 ->
-# 170 "lexico.mll"
+# 165 "lexico.mll"
           ( if (n==0 && b==0) then comentario_bloco (n+1) b lexbuf
                 else comentario_bloco (n+1) b lexbuf )
 # 2317 "lexico.ml"
 
   | 3 ->
-# 172 "lexico.mll"
+# 167 "lexico.mll"
           ( if (n==0 && b==0) then comentario_bloco n (b+1) lexbuf
                  else comentario_bloco n (b+1) lexbuf)
 # 2323 "lexico.ml"
 
   | 4 ->
-# 174 "lexico.mll"
+# 169 "lexico.mll"
           ( if (n==0 && b==0) then token lexbuf
               else comentario_bloco n b lexbuf )
 # 2329 "lexico.ml"
 
   | 5 ->
-# 177 "lexico.mll"
+# 172 "lexico.mll"
           ( if(n>0 || b>0) then failwith (msg_erro lexbuf "Comentario") 
             else failwith  (msg_erro lexbuf "Comentario"))
 # 2335 "lexico.ml"
@@ -2341,37 +2341,37 @@ and leia_string buffer lexbuf =
 and __ocaml_lex_leia_string_rec buffer lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 181 "lexico.mll"
+# 176 "lexico.mll"
            ( Buffer.contents buffer)
 # 2347 "lexico.ml"
 
   | 1 ->
-# 182 "lexico.mll"
+# 177 "lexico.mll"
             (Buffer.contents buffer)
 # 2352 "lexico.ml"
 
   | 2 ->
-# 183 "lexico.mll"
+# 178 "lexico.mll"
           ( Buffer.add_char buffer '\t'; leia_string buffer lexbuf )
 # 2357 "lexico.ml"
 
   | 3 ->
-# 184 "lexico.mll"
+# 179 "lexico.mll"
         ( Buffer.add_char buffer '\''; leia_string buffer lexbuf )
 # 2362 "lexico.ml"
 
   | 4 ->
 let
-# 186 "lexico.mll"
+# 181 "lexico.mll"
        c
 # 2368 "lexico.ml"
 = Lexing.sub_lexeme_char lexbuf lexbuf.Lexing.lex_start_pos in
-# 186 "lexico.mll"
+# 181 "lexico.mll"
             (Buffer.add_char buffer c; leia_string buffer lexbuf)
 # 2372 "lexico.ml"
 
   | 5 ->
-# 189 "lexico.mll"
+# 184 "lexico.mll"
           ( failwith (msg_erro lexbuf "String "))
 # 2377 "lexico.ml"
 
