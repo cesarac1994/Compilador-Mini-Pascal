@@ -1,0 +1,14 @@
+#!/bin/bash
+ARQUIVO=lexico.mll
+ARQUIVOII=_build/lexico.mll
+
+if  ls $ARQUIVO 
+then
+   rm $ARQUIVO
+fi
+
+if ls $ARQUIVOII 
+then
+	rm $ARQUIVOII
+fi
+	

@@ -1,7 +1,7 @@
 {
   open Lexing
   open Printf
-  (*Demais open*)
+  open Sintatico
 
   let incr_num_linha lexbuf = 
     let pos = lexbuf.lex_curr_p in
