@@ -4,7 +4,7 @@ open Ast
 %}
 
 %token PROGRAMA
-%token USES
+(* %token USES *)
 %token VAR
 %token INTEGER
 %token CHAR
@@ -43,6 +43,7 @@ open Ast
 %token DO
 %token FOR
 %token TO 
+%token DOWNTO
 %token WRITE
 %token WRITELN
 %token READ
@@ -65,6 +66,7 @@ open Ast
 %%
   
 programa: PROGRAMA
+          VAR
             ds = declaracao*
           BEGIN
             cs = comando*
@@ -109,17 +111,25 @@ comando_ifThen: ci = if_cabecalho_bloco
                  final=option(ENDBLOCO) (*sem else, ou com else com mais de 1 comando*)
                 { If_ (entao, senao) }
 
-(*-----------------------------CONTINUAR DAKI--------------------------*)
-(*--------------------------------ALTERAR O AST TAMBÉM------------------*)
-
 (*NÃO TINHA*)
 caseOf_cabecalho: CASE algo=expressao OF {Case algo}
 
-caseOF_OpcaoComando: opc=opcao DOISPONTOS com=blocoOuIfAninhado PONTOVIRGULA {OpcaoComandoCaseOf(opc,com)}
+(*NÃO TINHA*)
+caseOF_OpcCom: opc=opcao DOISPONTOS 
+               com=blocoOuIfAninhado 
+               ptvirg=option(PONTOVIRGULA) (*se estiver apenas 1 comando*)
+               endptvirg=option(ENDBLOCO) (*se estiver com mais de 1 comando, o begin não fecha sozinho!!!*)
+               {OpcaoComandoCaseOf(opc,com)}
 
+(*NÃO TINHA*)
+caseOF_OpcaoComandoBloco: blocoOpcaoComando = caseOF_OpcCom+ {BlockOpcaoComandoCaseOf blocoOpcaoComando}
+
+
+(*NÃO TINHA*)
 comando_caseOf: cabecalho=caseOf_cabecalho
-   /* (* **********CONCLUIR O CASEOF E COMEÇAR O comando_atribuicao******** *) */
-
+                opc_comando=caseOF_OpcaoComandoBloco
+                senao=option(ELSE portanto=blocoOuIfAninhado {Senao portanto}) (*com else*)
+                ENDBLOCO {caseOF(cabecalho, opc_comando, senao)}
 
 
 comando_condicao: ci = comando_ifThen { ci } 
@@ -143,18 +153,36 @@ expressao:
          | NAO APAR e=expressao FPAR { Nao e }
 
 
+comando_entrada: READ xs=separated_nonempty_list(VIRGULA, variavel) PONTOVIRGULA {CmdRead xs }
+                |READLN xs=separated_nonempty_list(VIRGULA, variavel) PONTOVIRGULA {CmdReadln xs }
 
 
+comando_saida: WRITE xs=separated_nonempty_list(VIRGULA, variavel) PONTOVIRGULA {CmdWrite xs}
+              |WRITELN xs=separated_nonempty_list(VIRGULA, variavel) PONTOVIRGULA {CmdWriteln xs}
 
-comando_entrada: ENTRADA xs=separated_nonempty_list(VIRGULA, variavel) PONTOVIRGULA {
-                   CmdEntrada xs
-               }
+(*-----------------------------CONTINUAR DAKI--------------------------*)
+(*--------------------------------ALTERAR O AST TAMBÉM------------------*)
+(*NÃO TINHA*)
+comando_laco: cw = comando_whileDo { cw }
+            | cf = comando_forDo   { cf }
 
-comando_saida: SAIDA xs=separated_nonempty_list(VIRGULA, variavel) PONTOVIRGULA {
-                 CmdSaida xs
-             }
+(*NÃO TINHA*)
+comando_whileDo: WHILE enquato=expressao DO 
+               oquefazer=blocoOuIfAninhado 
+               ptvirg=option(PONTOVIRGULA) (*se estiver apenas 1 comando*)
+               endptvirg=option(ENDBLOCO) (*se estiver com mais de 1 comando, o begin não fecha sozinho!!!*)
+               {CmdWhile(enquato, oquefazer)}
 
+(*NÃO TINHA*)
+for_cabecalho: FOR varLimitInf=variavel ATRIB limitInf=LITINT TO limitSup=LITINT DO { Intervalo(limitInf,limitSup) } 
+            | FOR varLimitInf=variavel ATRIB limitSupe=LITINT DOWNTO limitInfe=LITINT DO { Intervalo(limitSupe,limitInfe) }
+comando_forDo: itervalo=for_cabecalho
+              oquefazer=blocoOuIfAninhado 
+              ptvirg=option(PONTOVIRGULA) (*se estiver apenas 1 comando*)
+              endptvirg=option(ENDBLOCO) (*se estiver com mais de 1 comando, o begin não fecha sozinho!!!*)
+              {CmdFor(intervalo,oquefazer)}
 
+/* (* **********CONCLUIR O LAÇO E COMEÇAR O funçoes******** *) */
          
 %inline oper: SOMA           { Soma  }
             | SUBTRACAO      { Subtracao }
@@ -171,10 +199,11 @@ comando_saida: SAIDA xs=separated_nonempty_list(VIRGULA, variavel) PONTOVIRGULA 
             | OR             { Or }
             | XOR            { Xor }
 
+(*
 %inline funcaoSaida:  WRITE { Write }
                       | WRITELN { Writeln }
                      
 %inline funcaoEntrada:  READ { Read }
                       | READLN { Readln }
 
-
+*)

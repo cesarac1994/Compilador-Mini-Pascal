@@ -63,6 +63,7 @@ type tokens = PROGRAMA
             | DO
             | FOR
             | TO 
+            | DOWNTO  (*NO ANTERIOR NÃO TINHA!!!*)
             | WRITE
             | WRITELN
             | READ
@@ -145,6 +146,7 @@ rule token = parse
 | "while"    { WHILE }
 | "for"      { FOR }
 | "to"       { TO }
+| "downto"   { DOWNTO } 
 | "write"    { WRITE }
 | "writeln"  { WRITELN }
 | "read"     { READ }

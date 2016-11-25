@@ -9,7 +9,6 @@ and declaracao = DecVar of ident * tipo
 and tipo = TipoInt
          | TipoString
          | TipoBool
-         | TipoReal
          | TipoArranjo of tipo * int * int
          | TipoRegistro of campos
 
